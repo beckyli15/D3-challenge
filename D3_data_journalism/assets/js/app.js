@@ -42,16 +42,16 @@ function successHandle(hwdata){
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-      .domain([8.1, d3.max(hwdata, d => d.poverty)])
+      .domain([8.8, d3.max(hwdata, d => d.poverty)])
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([20, d3.max(hwdata, d => d.healthcare)])
+      .domain([4, d3.max(hwdata, d => d.healthcare)])
       .range([height, 0]);
 
     // Step 3: Create axis functions
     // ==============================
-    var bottomAxis = d3.axisBottom(xLinearScale);
+    var bottomAxis = d3.axisBottom(xLinearScale).ticks(7);
     var leftAxis = d3.axisLeft(yLinearScale);
 
     // Step 4: Append Axes to the chart
@@ -73,7 +73,7 @@ function successHandle(hwdata){
     .attr("cy", d => yLinearScale(d.healthcare))
     .attr("r", "13")
     .attr("fill", "#89bdd3")
-    .attr("opacity", ".75");
+    .attr("opacity", ".70");
 
     var circlesGroup= chartGroup.selectAll()
         .data(hwdata)
@@ -116,7 +116,7 @@ function successHandle(hwdata){
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .attr("class", "axisText")
-        .text("Lakes Healthcare (%)");
+        .text("Lacks Healthcare (%)");
 
     chartGroup.append("text")
       .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
