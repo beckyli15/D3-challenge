@@ -22,9 +22,11 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Import Data
-d3.csv("../data/data.csv")
-  .then(function(hwdata) {
+d3.csv("./assets/data/data.csv",function(err,hwdata){
+    if (err)throw err;
+ 
 
+    
     // Step 1: Parse Data/Cast as numbers
     // ==============================
     hwdata.forEach(function(data) {
@@ -32,14 +34,16 @@ d3.csv("../data/data.csv")
       data.healthcare = +data.healthcare;
     });
 
+   
+
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-      .domain([20, d3.max(hwdata, d => d.poverty)])
+      .domain([8.1, d3.max(hwdata, d => d.poverty)])
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(hwdata, d => d.healthcare)])
+      .domain([20, d3.max(hwdata, d => d.healthcare)])
       .range([height, 0]);
 
     // Step 3: Create axis functions
@@ -64,9 +68,20 @@ d3.csv("../data/data.csv")
     .append("circle")
     .attr("cx", d => xLinearScale(d.poverty))
     .attr("cy", d => yLinearScale(d.healthcare))
-    .attr("r", "15")
-    .attr("fill", "lightblue")
-    .attr("opacity", ".5");
+    .attr("r", "13")
+    .attr("fill", "#89bdd3")
+    .attr("opacity", ".75");
+
+    var circlesGroup= chartGroup.selectAll()
+        .data(statesData)
+        .enter()
+        .append("text")
+        .attr("x",d =>xLinearScale(d.poverty))
+        .attr("y",d => yLinearScale(d.healthcare))
+        .style("font-size","13px")
+        .style("text-anchor","middle")
+        .style('fill','white')
+        .text(d => (d.abbr));
 
     // Step 6: Initialize tool tip
     // ==============================
@@ -74,7 +89,7 @@ d3.csv("../data/data.csv")
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`${d.abbr}<br>Hair length: ${d.poverty}<br>Hits: ${d.healthcare}`);
+        return (`${d.state}<br>Poverty: ${d.poverty}<br>Healthcare%: ${d.healthcare}`);
       });
 
     // Step 7: Create tooltip in the chart
@@ -83,11 +98,11 @@ d3.csv("../data/data.csv")
 
     // // Step 8: Create event listeners to display and hide the tooltip
     // // ==============================
-    circlesGroup.on("click", function(data) {
+    circlesGroup.on("mouseover", function(data) {
       toolTip.show(data, this);
     })
       // onmouseout event
-      .on("mouseout", function(data,index) {
+      .on("mouseout", function(data) {
         toolTip.hide(data);
       });
 
@@ -98,11 +113,11 @@ d3.csv("../data/data.csv")
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .attr("class", "axisText")
-        .text("Number of Billboard 100 Hits");
+        .text("Lakes Healthcare (%)");
 
     chartGroup.append("text")
       .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
       .attr("class", "axisText")
-      .text("Hair Metal Band Hair Length (inches)");
+      .text("In Poverty (%)");
   });
 
