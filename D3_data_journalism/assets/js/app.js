@@ -22,11 +22,14 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Import Data
-d3.csv("./assets/data/data.csv",function(err,hwdata){
-    if (err)throw err;
+d3.csv("./assets/data/data.csv").then (successHandle, errorHandle);
+
+function errorHandle(error){
+    throw error;
+}
  
 
-    
+function successHandle(hwdata){
     // Step 1: Parse Data/Cast as numbers
     // ==============================
     hwdata.forEach(function(data) {
@@ -73,7 +76,7 @@ d3.csv("./assets/data/data.csv",function(err,hwdata){
     .attr("opacity", ".75");
 
     var circlesGroup= chartGroup.selectAll()
-        .data(statesData)
+        .data(hwdata)
         .enter()
         .append("text")
         .attr("x",d =>xLinearScale(d.poverty))
@@ -119,5 +122,5 @@ d3.csv("./assets/data/data.csv",function(err,hwdata){
       .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
       .attr("class", "axisText")
       .text("In Poverty (%)");
-  });
+  };
 
