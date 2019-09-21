@@ -13,7 +13,7 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
-var svg = d3.select(".chart")
+var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -92,7 +92,7 @@ function successHandle(hwdata){
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`${d.state}<br>Poverty: ${d.poverty}<br>Healthcare%: ${d.healthcare}`);
+        return (`${d.state}<br>Poverty% : ${d.poverty}<br>Healthcare% : ${d.healthcare}`);
       });
 
     // Step 7: Create tooltip in the chart
